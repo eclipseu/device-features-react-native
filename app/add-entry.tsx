@@ -76,8 +76,13 @@ export default function AddEntryScreen() {
 
   const didSaveRef = useRef<boolean>(false);
   const allowDismissRef = useRef<boolean>(false);
+  const hasUnsavedChangesRef = useRef<boolean>(false);
 
   const hasUnsavedChanges = Boolean(capturedImage || resolvedAddress);
+
+  useEffect(() => {
+    hasUnsavedChangesRef.current = hasUnsavedChanges;
+  }, [hasUnsavedChanges]);
 
   const resetState = useCallback(() => {
     setCapturedImage(null);
@@ -101,7 +106,7 @@ export default function AddEntryScreen() {
       const backSubscription = BackHandler.addEventListener(
         "hardwareBackPress",
         () => {
-          if (!hasUnsavedChanges) {
+          if (!hasUnsavedChangesRef.current) {
             return false;
           }
 
@@ -132,7 +137,7 @@ export default function AddEntryScreen() {
           resetState();
         }
       };
-    }, [hasUnsavedChanges, resetState, router]),
+    }, [resetState, router]),
   );
 
   useEffect(() => {
