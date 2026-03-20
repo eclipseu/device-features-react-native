@@ -11,8 +11,12 @@ import { useColorScheme } from "react-native";
 
 import {
   COLOR_PALETTES,
+  MODE_META,
+  THEME_GRADIENTS,
   TYPOGRAPHY,
   type ThemeColors,
+  type ThemeGradients,
+  type ThemeModeMeta,
   type ThemePreference,
   type TypographyScale,
 } from "../constants/theme";
@@ -24,6 +28,8 @@ type ThemeContextValue = {
   preference: ThemePreference;
   isHydrated: boolean;
   colors: ThemeColors;
+  gradients: ThemeGradients;
+  modeMeta: ThemeModeMeta;
   typography: TypographyScale;
   toggleTheme: () => Promise<void>;
   setThemePreference: (preference: ThemePreference) => Promise<void>;
@@ -90,6 +96,8 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
       preference,
       isHydrated,
       colors: COLOR_PALETTES[theme],
+      gradients: THEME_GRADIENTS,
+      modeMeta: MODE_META[theme],
       typography: TYPOGRAPHY,
       toggleTheme,
       setThemePreference,

@@ -74,21 +74,30 @@ export const EntryCard = ({ entry, onConfirmDelete }: EntryCardProps) => {
 
       <View style={styles.row}>
         <View style={styles.textContainer}>
-          <ThemedText numberOfLines={1} ellipsizeMode="tail" variant="bodyBold">
-            {entry.address}
+          <ThemedText
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            variant="dataReadout"
+            color={colors.header}
+          >
+            {`📍 SECTOR: ${entry.address.toUpperCase()}`}
+          </ThemedText>
+          <ThemedText variant="statusLabel" color={colors.accent}>
+            {`LOGGED: ${relativeTime}`}
           </ThemedText>
           <ThemedText variant="caption" color={colors.text} style={styles.meta}>
             {formattedDate}
           </ThemedText>
-          <ThemedText variant="caption" color={colors.primary}>
-            {relativeTime}
+          <View></View>
+          <ThemedText variant="comicSpeech" color={colors.header}>
+            INTEL PACKET READY
           </ThemedText>
         </View>
 
         <IconButton
-          icon="DEL"
+          icon="X"
           onPress={askDeleteConfirmation}
-          accessibilityLabel={`Delete travel entry at ${entry.address}`}
+          accessibilityLabel={`TERMINATE travel entry at ${entry.address}`}
         />
       </View>
     </Card>
@@ -102,8 +111,10 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    aspectRatio: 4 / 3,
-    borderRadius: 10,
+    aspectRatio: 3 / 2,
+    borderRadius: 0,
+    borderBottomWidth: 3,
+    borderBottomColor: "#0A0A0A",
   },
   row: {
     flexDirection: "row",
@@ -117,5 +128,19 @@ const styles = StyleSheet.create({
   },
   meta: {
     opacity: 0.85,
+  },
+  badge: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderWidth: 2,
+    borderColor: "#0A0A0A",
+    borderRadius: 0,
+  },
+  badgeText: {
+    letterSpacing: 2,
+    textShadowRadius: 0,
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowColor: "transparent",
   },
 });

@@ -11,8 +11,8 @@ type EmptyStateProps = {
 };
 
 export const EmptyState = ({
-  title = "No Entries yet",
-  description = "Start by creating your first travel memory.",
+  title = "NO FIELD DATA DETECTED",
+  description = "Awaiting reconnaissance input, Agent.",
   accessibilityLabel,
   style,
 }: EmptyStateProps) => {
@@ -28,21 +28,26 @@ export const EmptyState = ({
           justifyContent: "center",
           paddingVertical: 24,
           paddingHorizontal: 16,
-          borderRadius: 14,
+          borderRadius: 0,
           borderColor: colors.border,
-          borderWidth: 1,
+          borderWidth: 3,
           backgroundColor: colors.surface,
+          shadowColor: colors.shadow,
+          shadowOpacity: 0.3,
+          shadowRadius: 0,
+          shadowOffset: { width: 8, height: 8 },
+          elevation: 8,
         },
         style,
       ]}
     >
       <ThemedText
-        variant="title"
+        variant="heroTitle"
         style={{ textAlign: "center", marginBottom: 8 }}
       >
         {title}
       </ThemedText>
-      <ThemedText variant="body" style={{ textAlign: "center" }}>
+      <ThemedText variant="comicSpeech" style={{ textAlign: "center" }}>
         {description}
       </ThemedText>
     </View>

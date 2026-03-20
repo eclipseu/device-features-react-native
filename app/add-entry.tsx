@@ -5,6 +5,7 @@ import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { useCamera } from "../src/hooks/useCamera";
 import { useDevicePermissions } from "../src/hooks/useDevicePermissions";
@@ -36,7 +37,7 @@ const hasValidCoordinates = (
 export default function AddEntryScreen() {
   const router = useRouter();
   const navigation = useNavigation();
-  const { colors } = useTheme();
+  const { colors, gradients, theme } = useTheme();
 
   const {
     permissions,
@@ -339,9 +340,11 @@ export default function AddEntryScreen() {
     >
       <View style={styles.screenPadding}>
         <View style={styles.header}>
-          <ThemedText variant="title">Add Entry</ThemedText>
+          <ThemedText variant={theme === "dark" ? "terminalHeader" : "title"}>
+            {theme === "dark" ? "SAMPLE COLLECTION" : "MISSION DEPLOYMENT"}
+          </ThemedText>
           <Button
-            label="Cancel"
+            label="ABORT MISSION"
             onPress={cancelAndGoBack}
             variant="secondary"
             accessibilityLabel="Cancel and go back"
@@ -352,24 +355,102 @@ export default function AddEntryScreen() {
 
         {!capturedImage ? (
           <View style={styles.cameraShell}>
-            <CameraView
-              ref={cameraRef}
-              style={styles.cameraView}
-              facing="back"
-              onCameraReady={onCameraReady}
-              onMountError={onCameraError}
-              accessibilityLabel="Camera preview"
-            />
-            <Button
-              label={isCapturing ? "Capturing..." : "Capture"}
-              onPress={() => {
-                void capturePhoto();
-              }}
-              disabled={!isCameraReady || isCapturing}
-              loading={isCapturing}
-              accessibilityLabel="Capture image"
-              style={styles.captureButton}
-            />
+            <View style={styles.cameraFrame}>
+              <CameraView
+                ref={cameraRef}
+                style={styles.cameraView}
+                facing="back"
+                onCameraReady={onCameraReady}
+                onMountError={onCameraError}
+                accessibilityLabel="Camera preview"
+              />
+
+              <View style={styles.cameraHudTop}>
+                <ThemedText
+                  variant="statusLabel"
+                  color={theme === "dark" ? colors.primary : colors.error}
+                >
+                  REC ●
+                </ThemedText>
+                <ThemedText
+                  variant="dataReadout"
+                  color={theme === "dark" ? colors.secondary : colors.warning}
+                >
+                  BATTERY 88%
+                </ThemedText>
+              </View>
+
+              <View pointerEvents="none" style={styles.gridOverlay}>
+                <View style={styles.gridRow}>
+                  <View
+                    style={[
+                      styles.gridCell,
+                      styles.gridBorderRight,
+                      styles.gridBorderBottom,
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.gridCell,
+                      styles.gridBorderRight,
+                      styles.gridBorderBottom,
+                    ]}
+                  />
+                  <View style={[styles.gridCell, styles.gridBorderBottom]} />
+                </View>
+                <View style={styles.gridRow}>
+                  <View
+                    style={[
+                      styles.gridCell,
+                      styles.gridBorderRight,
+                      styles.gridBorderBottom,
+                    ]}
+                  />
+                  <View
+                    style={[
+                      styles.gridCell,
+                      styles.gridBorderRight,
+                      styles.gridBorderBottom,
+                    ]}
+                  />
+                  <View style={[styles.gridCell, styles.gridBorderBottom]} />
+                </View>
+                <View style={styles.gridRow}>
+                  <View style={[styles.gridCell, styles.gridBorderRight]} />
+                  <View style={[styles.gridCell, styles.gridBorderRight]} />
+                  <View style={styles.gridCell} />
+                </View>
+              </View>
+
+              <View style={styles.cameraHudBottom}>
+                <ThemedText
+                  variant="dataReadout"
+                  color={theme === "dark" ? colors.secondary : colors.warning}
+                >
+                  OPTICAL ZOOM 1.0x
+                </ThemedText>
+              </View>
+            </View>
+
+            <LinearGradient
+              colors={
+                theme === "dark" ? gradients.tVirus : gradients.spiderSense
+              }
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.captureRing}
+            >
+              <Button
+                label={isCapturing ? "ACQUIRING..." : "CAPTURE"}
+                onPress={() => {
+                  void capturePhoto();
+                }}
+                disabled={!isCameraReady || isCapturing}
+                loading={isCapturing}
+                accessibilityLabel="Capture image"
+                style={styles.captureButton}
+              />
+            </LinearGradient>
           </View>
         ) : (
           <View style={styles.previewShell}>
@@ -456,13 +537,60 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 12,
   },
+  cameraFrame: {
+    flex: 1,
+    borderWidth: 3,
+    borderColor: "#0A0A0A",
+    overflow: "hidden",
+    backgroundColor: "#000000",
+  },
   cameraView: {
     flex: 1,
-    borderRadius: 14,
-    overflow: "hidden",
+  },
+  cameraHudTop: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+    right: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  cameraHudBottom: {
+    position: "absolute",
+    left: 8,
+    bottom: 8,
+  },
+  gridOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.5,
+  },
+  gridRow: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  gridCell: {
+    flex: 1,
+  },
+  gridBorderRight: {
+    borderRightWidth: 1,
+    borderRightColor: "#FFD700",
+  },
+  gridBorderBottom: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#FFD700",
+  },
+  captureRing: {
+    padding: 3,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: "#0A0A0A",
   },
   captureButton: {
-    marginBottom: 8,
+    minHeight: 56,
+    borderRadius: 0,
+    borderWidth: 2,
+    borderColor: "#0A0A0A",
   },
   previewShell: {
     flex: 1,

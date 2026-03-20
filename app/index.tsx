@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 import type { TravelEntry } from "../src/types/travel";
 import { useStorage } from "../src/hooks/useStorage";
@@ -34,7 +35,7 @@ const showSuccessToast = (message: string) => {
 
 export default function HomeScreen() {
   const router = useRouter();
-  const { colors, theme, toggleTheme } = useTheme();
+  const { colors, gradients, modeMeta, theme, toggleTheme } = useTheme();
   const { entries, isLoading, error, refreshEntries, deleteEntry, clearError } =
     useStorage();
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -87,34 +88,46 @@ export default function HomeScreen() {
       style={[styles.safeArea, { backgroundColor: colors.background }]}
     >
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View style={styles.headerTitleSection}>
-            <ThemedText variant="heading">Travel Diary</ThemedText>
-            <ThemedText variant="caption">
-              Capture moments with location context
-            </ThemedText>
-          </View>
+        <LinearGradient
+          colors={theme === "dark" ? gradients.tVirus : gradients.webShooter}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.headerBanner}
+        >
+          <View style={styles.header}>
+            <View style={styles.headerTitleSection}>
+              <ThemedText variant="heroTitle" color="#F5F5F5">
+                TRAVEL REPORTS
+              </ThemedText>
+              <ThemedText variant="dataReadout" color="#F5F5F5">
+                {`Explored Areas: ${String(sortedEntries.length).padStart(2, "0")}`}
+              </ThemedText>
+              <ThemedText variant="statusLabel" color="#F5F5F5">
+                {modeMeta.shortLabel}
+              </ThemedText>
+            </View>
 
-          <View style={styles.headerActions}>
-            <Button
-              label="Add Entry"
-              onPress={() => {
-                router.push("/add-entry");
-              }}
-              accessibilityLabel="Go to add entry screen"
-              style={styles.smallButton}
-            />
-            <Button
-              label={theme === "dark" ? "Light" : "Dark"}
-              onPress={() => {
-                void toggleTheme();
-              }}
-              variant="secondary"
-              accessibilityLabel="Toggle theme"
-              style={styles.smallButton}
-            />
+            <View style={styles.headerActions}>
+              <Button
+                label="DEPLOY CAMERA"
+                onPress={() => {
+                  router.push("/add-entry");
+                }}
+                accessibilityLabel="Go to add entry screen"
+                style={styles.smallButton}
+              />
+              <Button
+                label={theme === "dark" ? "Light Mode" : "Dark Mode"}
+                onPress={() => {
+                  void toggleTheme();
+                }}
+                variant="secondary"
+                accessibilityLabel={modeMeta.label}
+                style={styles.smallButton}
+              />
+            </View>
           </View>
-        </View>
+        </LinearGradient>
 
         <ErrorMessage message={error} />
 
@@ -160,11 +173,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 8,
   },
+  headerBanner: {
+    borderWidth: 3,
+    borderColor: "#0A0A0A",
+    borderRadius: 0,
+    padding: 10,
+    marginBottom: 12,
+    shadowColor: "#0A0A0A",
+    shadowOpacity: 0.35,
+    shadowRadius: 0,
+    shadowOffset: { width: 8, height: 8 },
+    elevation: 8,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: 12,
     gap: 12,
   },
   headerTitleSection: {
@@ -172,7 +196,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   headerActions: {
-    width: 96,
+    width: 140,
     gap: 8,
   },
   smallButton: {

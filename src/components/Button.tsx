@@ -33,10 +33,10 @@ export const Button = ({
   const isDisabled = disabled || loading;
 
   const backgroundColor =
-    variant === "primary" ? colors.primary : colors.surface;
+    variant === "primary" ? colors.primary : colors.secondary;
 
-  const borderColor = variant === "primary" ? colors.primary : colors.border;
-  const textColor = variant === "primary" ? "#FFFFFF" : colors.text;
+  const borderColor = colors.border;
+  const textColor = variant === "primary" ? "#F5F5F5" : "#F5F5F5";
 
   return (
     <Pressable
@@ -48,14 +48,19 @@ export const Button = ({
       style={({ pressed }) => [
         {
           minHeight: 48,
-          borderRadius: 12,
-          borderWidth: 1,
+          borderRadius: 0,
+          borderWidth: 3,
           borderColor,
           backgroundColor,
           alignItems: "center",
           justifyContent: "center",
           opacity: isDisabled ? 0.6 : pressed ? 0.9 : 1,
           paddingHorizontal: 16,
+          shadowColor: colors.shadow,
+          shadowOpacity: 0.25,
+          shadowRadius: 0,
+          shadowOffset: { width: 4, height: 4 },
+          elevation: 5,
         },
         style,
       ]}
@@ -63,7 +68,7 @@ export const Button = ({
       {loading ? (
         <ActivityIndicator color={textColor} />
       ) : (
-        <ThemedText variant="bodyBold" color={textColor}>
+        <ThemedText variant="statusLabel" color={textColor}>
           {label}
         </ThemedText>
       )}
