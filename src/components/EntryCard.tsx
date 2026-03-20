@@ -77,20 +77,25 @@ export const EntryCard = ({ entry, onConfirmDelete }: EntryCardProps) => {
           <ThemedText
             numberOfLines={1}
             ellipsizeMode="tail"
-            variant="dataReadout"
-            color={colors.header}
+            variant="bodyBold"
+            color={colors.text}
+            style={styles.cleanText}
           >
-            {`📍 SECTOR: ${entry.address.toUpperCase()}`}
+            {entry.address}
           </ThemedText>
-          <ThemedText variant="statusLabel" color={colors.accent}>
-            {`LOGGED: ${relativeTime}`}
+          <ThemedText
+            variant="caption"
+            color={colors.primary}
+            style={styles.cleanText}
+          >
+            {relativeTime}
           </ThemedText>
-          <ThemedText variant="caption" color={colors.text} style={styles.meta}>
+          <ThemedText
+            variant="caption"
+            color={colors.text}
+            style={[styles.meta, styles.cleanText]}
+          >
             {formattedDate}
-          </ThemedText>
-          <View></View>
-          <ThemedText variant="comicSpeech" color={colors.header}>
-            INTEL PACKET READY
           </ThemedText>
         </View>
 
@@ -129,18 +134,9 @@ const styles = StyleSheet.create({
   meta: {
     opacity: 0.85,
   },
-  badge: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderWidth: 2,
-    borderColor: "#0A0A0A",
-    borderRadius: 0,
-  },
-  badgeText: {
-    letterSpacing: 2,
+  cleanText: {
+    textShadowColor: "transparent",
     textShadowRadius: 0,
     textShadowOffset: { width: 0, height: 0 },
-    textShadowColor: "transparent",
   },
 });
